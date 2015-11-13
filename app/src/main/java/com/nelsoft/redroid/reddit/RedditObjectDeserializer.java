@@ -7,8 +7,8 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import com.nelsoft.droiddit.reddit.model.RedditObject;
-import com.nelsoft.droiddit.reddit.model.RedditObjectWrapper;
+import com.nelsoft.redroid.reddit.model.RedditObject;
+import com.nelsoft.redroid.reddit.model.RedditObjectWrapper;
 
 import java.lang.reflect.Type;
 

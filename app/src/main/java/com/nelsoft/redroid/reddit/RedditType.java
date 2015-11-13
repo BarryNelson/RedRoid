@@ -1,9 +1,9 @@
 package com.nelsoft.redroid.reddit;
 
-import com.nelsoft.droiddit.reddit.model.RedditComment;
-import com.nelsoft.droiddit.reddit.model.RedditLink;
-import com.nelsoft.droiddit.reddit.model.RedditListing;
-import com.nelsoft.droiddit.reddit.model.RedditMore;
+import com.nelsoft.redroid.reddit.model.RedditComment;
+import com.nelsoft.redroid.reddit.model.RedditLink;
+import com.nelsoft.redroid.reddit.model.RedditListing;
+import com.nelsoft.redroid.reddit.model.RedditMore;
 
 public enum RedditType {
   t1(RedditComment.class),

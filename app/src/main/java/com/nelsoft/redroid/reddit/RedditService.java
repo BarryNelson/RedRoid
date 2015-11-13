@@ -3,9 +3,9 @@ package com.nelsoft.redroid.reddit;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.nelsoft.droiddit.reddit.model.RedditListing;
-import com.nelsoft.droiddit.reddit.model.RedditObject;
-import com.nelsoft.droiddit.reddit.model.RedditResponse;
+import com.nelsoft.redroid.reddit.model.RedditListing;
+import com.nelsoft.redroid.reddit.model.RedditObject;
+import com.nelsoft.redroid.reddit.model.RedditResponse;
 
 import org.joda.time.DateTime;
 
