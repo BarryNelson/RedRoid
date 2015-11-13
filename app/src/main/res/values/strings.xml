@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">RedRoid</string>
+    <string name="action_settings">Settings</string>
+    <string name="displays_torn_edges">Displays torn edges</string>
+    <string name="button">Button</string>
+    <string name="search">search</string>
+
+</resources>
