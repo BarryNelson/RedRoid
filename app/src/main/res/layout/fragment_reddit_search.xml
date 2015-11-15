@@ -1,0 +1,88 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nelsoft.redroid.reddit_search.RedditSearchFragment">
+
+    <RelativeLayout
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/input_bar">
+
+        <LinearLayout
+            android:id="@+id/searchLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/btn_Search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:contentDescription="Search icon"
+                android:src="@android:drawable/ic_search_category_default"/>
+
+            <EditText
+                android:id="@+id/text_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="10"
+                android:ems="10"
+                android:hint="@string/search"
+                android:singleLine="true"
+                android:text="funny">
+
+                <requestFocus/>
+            </EditText>
+
+            <ImageView
+                android:id="@+id/btn_clear_text_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:contentDescription="Cancel search"
+                android:src="@mipmap/cross"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/searchView"
+        android:layout_centerHorizontal="true"
+        android:background="@mipmap/bg">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/redit_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="20sp"
+            android:dividerHeight="1dip"
+            android:scrollbars="vertical"/>
+
+        <ImageView
+            android:id="@+id/border_decoration"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/displays_torn_edges"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/overlay"/>
+    </RelativeLayout>
+
+</RelativeLayout>

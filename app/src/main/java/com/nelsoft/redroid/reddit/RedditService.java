@@ -32,20 +32,20 @@ public interface RedditService {
             Callback<List<RedditResponse<RedditListing>>> callback
     );
 
-    @GET("/r/{subreddit}.json")
+    @GET("/r/{subreddit}/.json")
     RedditResponse<RedditListing> getSubreddit(
             @Path("subreddit") String subreddit);
 
-    @GET("/r/{subreddit}.json")
+    @GET("/r/{subreddit}/.json")
     void getSubreddit(
             @Path("subreddit") String subreddit,
             Callback<RedditResponse<RedditListing>> callback);
 
     // example: getSubreddit("funny", "after=t3_3sjcxx"); // the ? will be added by @Query
-    @GET("/r/{subreddit}.json")
-    void getSubreddit(
+    @GET("/r/{subreddit}/.json")
+    void getSubredditAfter(
             @Path("subreddit") String subreddit,
-            @Query("param") String param,
+            @Query("after") String param,
             Callback<RedditResponse<RedditListing>> callback
     );
 
