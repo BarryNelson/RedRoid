@@ -5,14 +5,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.nelsoft.redroid.reddit_search.RedditRecyclerAdapter;
+import com.nelsoft.redroid.reddit.model.RedditLink;
 import com.nelsoft.redroid.reddit_search.RedditSearchFragment;
 
 public class MainActivity
         extends AppCompatActivity
         implements
         RedditSearchFragment.OnRedditSearchFragmentListener
-        , RedditRecyclerAdapter.Callback{
+{
     
     private static final String TAG = "MainActivity";
 
@@ -36,15 +36,8 @@ public class MainActivity
         transaction.commit();
     }
 
-
     @Override
-    public void onSelectedItem(int dummy) {
-        Log.i(TAG, "selected :"+dummy);
-    }
-
-    // RedditRecyclerAdapter.Callback
-    @Override
-    public void getAfter() {
-        Log.i(TAG, "getAfter :");
+    public void onSelectedItem(RedditLink lineLink) {
+        Log.i(TAG, "onSelectedItem:" + lineLink.getUrl());
     }
 }

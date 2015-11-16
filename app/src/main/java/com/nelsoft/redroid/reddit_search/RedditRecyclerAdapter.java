@@ -28,7 +28,6 @@ public class RedditRecyclerAdapter
     private List<RedditLink> redditPostList = new ArrayList<RedditLink>();
     private Fragment fragActivity;
 
-    //TODO change callback
     // Provide a suitable constructor (depends on the kind of dataset)
     public RedditRecyclerAdapter(Context context, Callback callback, List<RedditLink> redditPosts) {
         this.context = context;
@@ -90,14 +89,11 @@ public class RedditRecyclerAdapter
         Log.i(TAG, "AT>>" + holder.getAdapterPosition() + " : " + holder.getLayoutPosition());
         if(getItemCount() - holder.getAdapterPosition() < 20 ){
 //            Log.i(TAG, "Get more!");
-            callback.getAfter();
+            callback.getMore();
         }
         super.onViewAttachedToWindow(holder);
     }
 
-    public interface Callback {
-        public void getAfter();
-    }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
@@ -133,11 +129,22 @@ public class RedditRecyclerAdapter
         @Override
         public void onClick(View view) {
             Log.i(TAG, "--> onClick: " + lineLink.getUrl());
+            Log.i(TAG, "--> onClick: " + lineLink.getUrl());
+            callback.onSelectedItem(lineLink);
         }
 
+        /**
+         * returns link to lineitem in RecyclerView.ViewHolder
+         * @return
+         */
         public RedditLink getLineLink() {
             return lineLink;
         }
+    }
+
+    public interface Callback {
+        public void getMore();
+        public void onSelectedItem(RedditLink lineLink);
     }
 
 }

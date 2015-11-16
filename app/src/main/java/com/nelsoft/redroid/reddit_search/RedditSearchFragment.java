@@ -49,6 +49,8 @@ public class RedditSearchFragment extends Fragment {
     private String lastSearch;
     private Callback<RedditResponse<RedditListing>> redditCallback;
     private boolean searching = false;
+    private Context context;
+    private OnRedditSearchFragmentListener callback;
 
     public RedditSearchFragment() {
     }
@@ -102,13 +104,21 @@ public class RedditSearchFragment extends Fragment {
         if (recAdapterCallback==null) {
             recAdapterCallback = new RedditRecyclerAdapter.Callback() {
 
+                /**
+                 * do another search on subreddit.getData().getMore()
+                 */
                 @Override
-                public void getAfter() {
+                public void getMore() {
                     if (!searching) {
-//                        after = "after=" + listing.getData().getAfter();
-                        after = listing.getData().getAfter();
+//                        after = "after=" + listing.getData().getMore();
+                        after = listing.getData().getMore();
                         doSearch(searchValue.getText().toString(), after);
                     }
+                }
+
+                @Override
+                public void onSelectedItem(RedditLink lineLink) {
+                    callback.onSelectedItem(lineLink);
                 }
             };
         }
@@ -176,7 +186,7 @@ public class RedditSearchFragment extends Fragment {
 
     private void onListingReceived(RedditResponse<RedditListing> listing) {
         this.listing = listing;
-        Log.d(TAG, "after :"+listing.getData().getAfter());
+        Log.d(TAG, "after :"+listing.getData().getMore());
         ListIterator<RedditObject> itr = listing.getData().getChildren().listIterator();
         while (itr.hasNext()) {
             RedditObject rObject = itr.next();
@@ -208,9 +218,28 @@ public class RedditSearchFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        Log.i(TAG, "onAttach(Activity activity)");
+        super.onAttach(activity);
+        Context context = activity.getApplicationContext();
+        try {
+            callback = (OnRedditSearchFragmentListener) activity;
+        } catch (Exception e) {
+            throw new ClassCastException(activity.toString()+ " must implement OnRedditSearchFragmentListener");
+        }
+    }
+
+    @Override
     public void onAttach(Context context) {
-        this.activity = this.getActivity();
-        Log.i(TAG, "onAttach");
+        Log.i(TAG, "onAttach(Context context)");
+        super.onAttach(context);
+        this.context = context;
+
+        try {
+            callback = (OnRedditSearchFragmentListener) context;
+        } catch (Exception e) {
+            throw new ClassCastException(activity.toString()+ " must implement OnRedditSearchFragmentListener");
+        }
     }
 
     @Override
@@ -221,8 +250,7 @@ public class RedditSearchFragment extends Fragment {
 
 
     public interface OnRedditSearchFragmentListener {
-        // TODO: Update argument type and name
-        public void onSelectedItem(int dummy);
+        public void onSelectedItem(RedditLink lineLink);
     }
 
 }

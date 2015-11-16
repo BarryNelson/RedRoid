@@ -12,7 +12,7 @@ public class RedditListing extends RedditObject {
     return modhash;
   }
 
-  public String getAfter() {
+  public String getMore() {
     return after;
   }
 
