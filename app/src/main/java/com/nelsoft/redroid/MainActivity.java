@@ -30,6 +30,7 @@ public class MainActivity
             // and add the transaction to the back stack so the user can navigate back
             transaction.detach(detailFragment);
             transaction.commit();
+            detailFragment = null;
         }
     }
 
