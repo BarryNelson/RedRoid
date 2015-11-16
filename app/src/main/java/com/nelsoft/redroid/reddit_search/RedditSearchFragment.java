@@ -3,6 +3,7 @@ package com.nelsoft.redroid.reddit_search;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -34,23 +35,23 @@ public class RedditSearchFragment extends Fragment {
     
     private static final String TAG = "RedditSearchFragment";
 
-    private OnRedditSearchFragmentListener mListener;
-    private Activity activity;
     private View view;
+
+    private Context context;
+
+    private Callback<RedditResponse<RedditListing>> redditCallback;
+    private OnRedditSearchFragmentListener callback;
 
     ArrayList<RedditLink> redditPostingList = new ArrayList<>();
     private EditText searchValue;
-    private String subreddit;
+    private String after = null;
+    private boolean searching = false;
+
     private RecyclerView redditRecyclerView;
     private RedditRecyclerAdapter redditRecyclerAdapter;
     private LinearLayoutManager layoutManager;
     private RedditResponse<RedditListing> listing;
-    private String after = null;
-    private String lastSearch;
-    private Callback<RedditResponse<RedditListing>> redditCallback;
-    private boolean searching = false;
-    private Context context;
-    private OnRedditSearchFragmentListener callback;
+    private ProgressDialog mProgressDialog;
 
     public RedditSearchFragment() {
     }
@@ -100,6 +101,15 @@ public class RedditSearchFragment extends Fragment {
     RedditRecyclerAdapter.Callback recAdapterCallback = null;
 
     // implements RedditRecyclerAdapter.Callback
+
+    /**
+     * RedditRecyclerAdapter.Callback
+     *
+     * @see RedditRecyclerAdapter.Callback#getMore()
+     * @see RedditRecyclerAdapter.Callback#onSelectedItem(RedditLink)
+     *
+     * @return edditRecyclerAdapter.Callback
+     */
     RedditRecyclerAdapter.Callback getRedditRecyclerAdapterCallback(){
         if (recAdapterCallback==null) {
             recAdapterCallback = new RedditRecyclerAdapter.Callback() {
@@ -110,12 +120,15 @@ public class RedditSearchFragment extends Fragment {
                 @Override
                 public void getMore() {
                     if (!searching) {
-//                        after = "after=" + listing.getData().getMore();
                         after = listing.getData().getMore();
                         doSearch(searchValue.getText().toString(), after);
                     }
                 }
 
+                /**
+                 * @see com.nelsoft.redroid.reddit_search.RedditRecyclerAdapter.Callback
+                 * @param lineLink
+                 */
                 @Override
                 public void onSelectedItem(RedditLink lineLink) {
                     callback.onSelectedItem(lineLink);
@@ -129,16 +142,18 @@ public class RedditSearchFragment extends Fragment {
 
         searching = true;
 
-        Log.d(TAG, "search param{" + subreddit.toString() + ", " + (extra == null ? "" : extra) + "}");
+        Log.d(TAG, "search param{" + subreddit + ", " + (extra == null ? "" : extra) + "}");
 
         // clear previous list if a new search (extra == null)
         if (extra == null) {
             redditPostingList.clear();
-            //
-            // @GET("/r/{subreddit}.json")
-            // void getSubreddit(@Path("subreddit") String subreddit,
-            //         Callback<RedditResponse<RedditListing>> callback)
-            //
+            redditRecyclerAdapter.notifyDataSetChanged();
+
+            mProgressDialog = new ProgressDialog(getActivity());
+            mProgressDialog.setMessage("Loading subreddit " + subreddit);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.show();
+
             RedditService.Implementation.get().getSubreddit(subreddit, redditCallback);
         } else {
             RedditService.Implementation.get().getSubredditAfter(subreddit, extra, redditCallback);
@@ -152,25 +167,25 @@ public class RedditSearchFragment extends Fragment {
         return new Callback<RedditResponse<RedditListing>>() {
             @Override
             public void success(RedditResponse<RedditListing> listing, Response response) {
-//                if (isDestroyed()) {
-//                    return;
-//                }
-                //                        mProgressDialog.dismiss();
-                Log.d(TAG, "response url:"+response.getUrl());
-                Log.d(TAG, "response status:"+response.getStatus());
+                Log.d(TAG, "response url:" + response.getUrl() + ", status:" + response.getStatus());
                 onListingReceived(listing);
+                if (mProgressDialog != null) {
+                    mProgressDialog.dismiss();
+                }
                 searching = false;
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Log.e(TAG, "RetrofitError URL :" + error.getUrl());
-                Log.e(TAG, "RetrofitError detailMessage :"+error.getMessage());
-//                if (isDestroyed()) {
-//                    return;
-//                }
-                //                        mProgressDialog.dismiss();
-                new AlertDialog.Builder(activity)
+                Log.e(TAG, "RetrofitError detailMessage :" + error.getMessage());
+                if (getActivity().isDestroyed()) {
+                    return;
+                }
+                if (mProgressDialog != null) {
+                    mProgressDialog.dismiss();
+                }
+                new AlertDialog.Builder(context)
                         .setMessage("Loading failed :(")
                         .setCancelable(false)
                         .setNeutralButton("OK", new DialogInterface.OnClickListener() {
@@ -186,14 +201,11 @@ public class RedditSearchFragment extends Fragment {
 
     private void onListingReceived(RedditResponse<RedditListing> listing) {
         this.listing = listing;
-        Log.d(TAG, "after :"+listing.getData().getMore());
         ListIterator<RedditObject> itr = listing.getData().getChildren().listIterator();
         while (itr.hasNext()) {
-            RedditObject rObject = itr.next();
-            RedditLink rLink = (RedditLink) rObject;
-            redditPostingList.add(rLink);
+            redditPostingList.add((RedditLink) itr.next());
         }
-        Log.i(TAG, "redditPostingList size:"+redditPostingList.size());
+        Log.i(TAG, "added RedditLink items, redditPostingList size:"+redditPostingList.size());
         redditRecyclerAdapter.notifyDataSetChanged();
     }
 
@@ -208,7 +220,7 @@ public class RedditSearchFragment extends Fragment {
         redditRecyclerView = (RecyclerView) view.findViewById(R.id.redit_recycler_view);
 
         // use a linear layout manager
-        layoutManager = new LinearLayoutManager(activity);
+        layoutManager = new LinearLayoutManager(context);
         redditRecyclerView.setLayoutManager(layoutManager);
 
         redditRecyclerAdapter = new RedditRecyclerAdapter(getActivity(), getRedditRecyclerAdapterCallback(), redditLinkList);
@@ -217,11 +229,17 @@ public class RedditSearchFragment extends Fragment {
 
     }
 
+    /**
+     * for API below 23
+     * @param activity
+     */
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
         Log.i(TAG, "onAttach(Activity activity)");
         super.onAttach(activity);
-        Context context = activity.getApplicationContext();
+        this.context = activity;
+
         try {
             callback = (OnRedditSearchFragmentListener) activity;
         } catch (Exception e) {
@@ -229,6 +247,10 @@ public class RedditSearchFragment extends Fragment {
         }
     }
 
+    /**
+     * for API 23+
+     * @param context
+     */
     @Override
     public void onAttach(Context context) {
         Log.i(TAG, "onAttach(Context context)");
@@ -238,19 +260,30 @@ public class RedditSearchFragment extends Fragment {
         try {
             callback = (OnRedditSearchFragmentListener) context;
         } catch (Exception e) {
-            throw new ClassCastException(activity.toString()+ " must implement OnRedditSearchFragmentListener");
+            throw new ClassCastException(context.toString()+ " must implement OnRedditSearchFragmentListener");
         }
     }
 
     @Override
     public void onDetach() {
+        Log.i(TAG, "onDetach()");
         super.onDetach();
-        mListener = null;
+        callback = null;
+        redditCallback = null;
     }
 
-
+    /**
+     * RedditSearchFragment.OnRedditSearchFragmentListener
+     * @see OnRedditSearchFragmentListener#onSelectedItem(RedditLink)
+     */
     public interface OnRedditSearchFragmentListener {
-        public void onSelectedItem(RedditLink lineLink);
+
+        /**
+         * Receives a selected RedditLink item
+         *
+         * @param redditLink - the seleced RecyclerList item
+         */
+        public void onSelectedItem(RedditLink redditLink);
     }
 
 }

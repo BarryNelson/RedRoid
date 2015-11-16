@@ -4,4 +4,7 @@
     <string name="displays_torn_edges">Displays torn edges</string>
     <string name="button">Button</string>
     <string name="search">search</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

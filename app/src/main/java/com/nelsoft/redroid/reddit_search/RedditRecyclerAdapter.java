@@ -76,7 +76,7 @@ public class RedditRecyclerAdapter
 
         holder.lineAuthor.setText(redditPostList.get(position).getAuthor());
         holder.lineTitle.setText(redditPostList.get(position).getTitle());
-        holder.lineLink = redditPostList.get(position);
+        holder.redditLink = redditPostList.get(position);
 
     }
 
@@ -86,9 +86,8 @@ public class RedditRecyclerAdapter
      */
     @Override
     public void onViewAttachedToWindow(ViewHolder holder) {
-        Log.i(TAG, "AT>>" + holder.getAdapterPosition() + " : " + holder.getLayoutPosition());
+//        Log.i(TAG, "AT>>" + holder.getAdapterPosition() + " : " + holder.getLayoutPosition());
         if(getItemCount() - holder.getAdapterPosition() < 20 ){
-//            Log.i(TAG, "Get more!");
             callback.getMore();
         }
         super.onViewAttachedToWindow(holder);
@@ -116,7 +115,7 @@ public class RedditRecyclerAdapter
         private final ImageView thumbnail;
         private final TextView lineAuthor;
         private final TextView lineTitle;
-        protected RedditLink lineLink = null;
+        protected RedditLink redditLink = null;
 
         public ViewHolder(View v) {
             super(v);
@@ -128,23 +127,37 @@ public class RedditRecyclerAdapter
 
         @Override
         public void onClick(View view) {
-            Log.i(TAG, "--> onClick: " + lineLink.getUrl());
-            Log.i(TAG, "--> onClick: " + lineLink.getUrl());
-            callback.onSelectedItem(lineLink);
+            callback.onSelectedItem(redditLink);
         }
 
         /**
          * returns link to lineitem in RecyclerView.ViewHolder
          * @return
          */
-        public RedditLink getLineLink() {
-            return lineLink;
+        public RedditLink getRedditLink() {
+            return redditLink;
         }
     }
 
+    /**
+     * RedditRecyclerAdapter.Callback
+     *
+     * @see RedditRecyclerAdapter.Callback#getMore()
+     * @see RedditRecyclerAdapter.Callback#onSelectedItem(RedditLink)
+     *
+     * @return edditRecyclerAdapter.Callback
+     */
     public interface Callback {
+        /**
+         * A request for next batch of RedditLinks
+         */
         public void getMore();
-        public void onSelectedItem(RedditLink lineLink);
+
+        /**
+         * Receive the selected line from the Callback
+         * @param redditLink
+         */
+        public void onSelectedItem(RedditLink redditLink);
     }
 
 }
