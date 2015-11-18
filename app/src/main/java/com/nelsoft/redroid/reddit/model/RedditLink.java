@@ -64,11 +64,15 @@ public class RedditLink extends RedditSubmission {
     return url;
   }
 
-  public String getTitle() {
-    return title;
-  }
+    public String getTitle() {
+        return title;
+    }
 
-  public int getNumComments() {
+    public void setTitle(String title) {
+         this.title = title;
+    }
+
+    public int getNumComments() {
     return num_comments;
   }
 

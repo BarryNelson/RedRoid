@@ -3,7 +3,6 @@ package com.nelsoft.redroid.reddit_search;
 import android.app.Fragment;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.nelsoft.redroid.RedditBleach;
 import com.nelsoft.redroid.R;
 import com.nelsoft.redroid.reddit.model.RedditLink;
 
@@ -33,6 +33,7 @@ public class RedditRecyclerAdapter
         this.context = context;
         this.callback = callback;
         redditPostList = redditPosts;
+
     }
 
 //    	public void add(int position, String item) {
@@ -46,6 +47,22 @@ public class RedditRecyclerAdapter
         notifyItemRemoved(position);
     }
 
+    /**
+     * Massage link to point directly to image
+     *
+     * @param url
+     * @return
+     */
+    String targetImage(String url) {
+        if (url.startsWith("http//imgur.com/")) {
+            StringBuffer temp = new StringBuffer(url);
+            temp.append(".jpg");
+            temp.insert(7, "i.");
+            return temp.toString();
+        } else {
+            return url;
+        }
+    }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
@@ -55,27 +72,31 @@ public class RedditRecyclerAdapter
         final RedditLink redditLink = redditPostList.get(position);
 
         // thumbnail
-        String thumbnailURL= null;
-        if (redditLink.getThumbnail().equals("nsfw")) {
-            thumbnailURL = redditLink.getUrl();
-            if (thumbnailURL.startsWith("http//imgur.com/")) {
-                StringBuffer temp = new StringBuffer(thumbnailURL);
-                temp.append(".jpg");
-                temp.insert(7, "i.");
-                thumbnailURL = temp.toString();
-                Log.i(TAG, ">>> " + redditLink.getAuthor() + ">>>> " + thumbnailURL);
-            } else {
-                Log.i(TAG, "[[ "+thumbnailURL+" ]]");
-            }
-        } else {
-            thumbnailURL = redditLink.getThumbnail();
+        String thumbnailURL = redditLink.getThumbnail();
+        if (thumbnailURL.equals("nsfw")) {
+            thumbnailURL = RedditBleach.getInstance().targetImage(redditLink.getUrl());
+//            thumbnailURL = redditLink.getUrl();
+//            if (thumbnailURL.startsWith("http://imgur.com/")) {
+//                StringBuffer temp = new StringBuffer(thumbnailURL);
+//                temp.append(".jpg");
+//                temp.insert(7, "i.");
+//                thumbnailURL = temp.toString();
+//                Log.i(TAG, ">>> " + redditLink.getAuthor() + ">>>> " + thumbnailURL);
+//            } else {
+//                boolean m = thumbnailURL.startsWith("http://i.imgur.com/");
+//                Log.i(TAG, "[[ "+thumbnailURL+" ]]"+(m?"true":"false"));
+//            }
         }
+
         Glide.with(context)
                 .load(thumbnailURL)
                 .into(holder.thumbnail);
 
+//        String title = redditPostList.get(position).getTitle();
+        String title = RedditBleach.getInstance().cleanString(redditPostList.get(position).getTitle());
+        redditPostList.get(position).setTitle(title);
         holder.lineAuthor.setText(redditPostList.get(position).getAuthor());
-        holder.lineTitle.setText(redditPostList.get(position).getTitle());
+        holder.lineTitle.setText(title);
         holder.redditLink = redditPostList.get(position);
 
     }

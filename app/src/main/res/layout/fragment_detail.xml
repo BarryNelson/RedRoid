@@ -42,7 +42,7 @@
             android:layout_below="@+id/detailAuthor"
             android:layout_marginLeft="14dp"
             android:text="detail"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/holo_purple"
             android:textSize="20sp"/>
     </RelativeLayout>
 

@@ -71,7 +71,7 @@ public class DetailFragment extends Fragment {
             author = getArguments().getString(ARG_AUTHOR);
             title = getArguments().getString(ARG_TITLE);
         }
-
+        strURL = RedditBleach.getInstance().findGraphicObject(strURL);
     }
 
     private void display() {
@@ -82,9 +82,13 @@ public class DetailFragment extends Fragment {
         detailImage.setWebViewClient(new WebViewClient());
         detailImage.getSettings().setDomStorageEnabled(true); // localStorage
         detailImage.setWebChromeClient(new WebChromeClient()); // for alerts to appear
+//        detailImage.setInitialScale(30);
+        detailImage.getSettings().setLoadWithOverviewMode(true);
+        detailImage.getSettings().setUseWideViewPort(true);
         detailImage.loadUrl(strURL);
+
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
