@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context="com.nelsoft.redroid.reddit_search.RedditSearchFragment">
 
     <RelativeLayout
@@ -27,7 +29,8 @@
                 android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 android:contentDescription="Search icon"
-                android:src="@android:drawable/ic_search_category_default"/>
+                android:src="@android:drawable/ic_search_category_default">
+            </ImageView>
 
             <EditText
                 android:id="@+id/text_search"
@@ -40,8 +43,6 @@
                 android:hint="@string/search"
                 android:singleLine="true"
                 android:text="funny">
-
-                <requestFocus/>
             </EditText>
 
             <ImageView

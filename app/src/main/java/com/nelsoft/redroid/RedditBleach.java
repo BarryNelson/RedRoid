@@ -45,7 +45,7 @@ public class RedditBleach {
             if (input.contains(key)) {
                 int p = input.indexOf(key);
                 output.replace(p, p + key.length(), dirtyClean.get(key));
-                Log.i(TAG, key + ":" + p);
+                Log.d(TAG, "masked-out :<"+key + "> at:" + p);
             }
         }
         return output.toString();
@@ -70,8 +70,28 @@ public class RedditBleach {
         }
     }
 
-    public String findGraphicObject(String url) {
+    /**
+     * 
+     * @param url
+     * @return
+     */
+    public boolean checkExtension(String url){
 
+        String[] parts = url.split("\\.");
+        if (parts.length > 0) {
+            boolean test = ".gifv.gif.mov.png.jpeg.jpg.mp4".contains("." + parts[parts.length - 1]);
+            if (test){
+                Log.i(TAG, "file :" + url);
+            }
+            return test;
+        }
+        return false;
+    }
+
+    public String findGraphicObject(String url) {
+        if (checkExtension(url)){
+            return url;
+        }
         class FileCheck extends Thread {
             boolean busy = true;
             String url = null;
@@ -94,9 +114,9 @@ public class RedditBleach {
                         String ff = url.getFile();
                         String type = resp.getContentType();
                         Log.i(TAG, "file :" + ff + ", type :" + type);
-                        if ("image/gif".equals(type)
-                                || "image/jpeg".equals(type)
-                                ) {
+                        if (type.startsWith("image/"))
+//                        if ("image/gif".equals(type) || "image/jpeg".equals(type))
+                        {
                             theUrl = url.toString();
                             break;
                         }
