@@ -85,7 +85,9 @@ public class DetailFragment extends Fragment {
 //        detailImage.setInitialScale(30);
         detailImage.getSettings().setLoadWithOverviewMode(true);
         detailImage.getSettings().setUseWideViewPort(true);
-//        detailImage.setInitialScale(100);
+        if (strURL.contains("gif")) {
+            detailImage.setInitialScale(100);
+        }
 //        detailImage.invokeZoomPicker();
         detailImage.loadUrl(strURL);
 

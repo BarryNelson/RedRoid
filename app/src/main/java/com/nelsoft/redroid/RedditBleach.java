@@ -19,14 +19,24 @@ public class RedditBleach {
 
     HashMap<String, String> dirtyClean = new HashMap<String, String>() {{
         put("fuck", "f*&#");
+        put("Fuck", "F*&#");
+        put("FUCK", "F*&#");
         put("shit", "s*&#");
+        put("Shit", "S*&#");
+        put("SHIT", "S*&#");
         put("motherfucker", "m*&#^%$#%&!@");
+        put("MotherFucker", "m*&#^%$#%&!@");
+        put("MOTHERFUCKER", "m*&#^%$#%&!@");
         put("fucker", "f*&#^%");
+        put("Fucker", "F*&#^%");
+        put("FUCKER", "F*&#^%");
         put("piss", "p*&^");
         put("pissoff", "p*&^*(&");
         put("pissed", "drunk");
         put("pecker", "p@$#$%");
         put("cunt", "^&%$");
+        put("Cunt", "^&%$");
+        put("CUNT", "^&%$");
         put("asshole", "a(*&*%!");
     }};
 
