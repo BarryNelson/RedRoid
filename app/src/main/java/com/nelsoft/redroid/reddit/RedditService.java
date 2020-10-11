@@ -1,6 +1,5 @@
 package com.nelsoft.redroid.reddit;
 
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.nelsoft.redroid.reddit.model.RedditListing;
@@ -60,7 +59,7 @@ public interface RedditService {
             return new RestAdapter
                     .Builder()
                     .setConverter(new GsonConverter(getGson()))
-                    .setEndpoint("http://www.reddit.com");
+                    .setEndpoint("https://www.reddit.com");
         }
 
         private static Gson getGson() {

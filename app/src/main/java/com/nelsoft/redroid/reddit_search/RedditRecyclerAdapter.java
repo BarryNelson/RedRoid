@@ -18,8 +18,7 @@ import com.nelsoft.redroid.reddit.model.RedditLink;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RedditRecyclerAdapter
-        extends RecyclerView.Adapter<RedditRecyclerAdapter.ViewHolder> {
+public class RedditRecyclerAdapter extends RecyclerView.Adapter<RedditRecyclerAdapter.ViewHolder> {
     
     private final Callback callback;
     private final Context context;

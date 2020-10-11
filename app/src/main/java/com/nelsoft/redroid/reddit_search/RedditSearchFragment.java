@@ -1,11 +1,13 @@
 package com.nelsoft.redroid.reddit_search;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -228,6 +230,7 @@ public class RedditSearchFragment extends Fragment {
             @Override
             public void success(RedditResponse<RedditListing> listing, Response response) {
                 Log.d(TAG, "response url:" + response.getUrl() + ", status:" + response.getStatus());
+                
                 onListingReceived(listing);
                 if (mProgressDialog != null) {
                     mProgressDialog.dismiss();
@@ -235,6 +238,7 @@ public class RedditSearchFragment extends Fragment {
                 searching = false;
             }
 
+            @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
             @Override
             public void failure(RetrofitError error) {
                 Log.e(TAG, "RetrofitError URL :" + error.getUrl());
